@@ -23,8 +23,8 @@
     "d3-transition": "3.0.1",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^7.1.5",
     "react-speech-recognition": "^3.10.0",
     "regenerator-runtime": "^0.14.1"
