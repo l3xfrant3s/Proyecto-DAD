@@ -10,13 +10,26 @@ import { transition } from "d3-transition"
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 
-const csvDelLolillo = await csv("200125_LoL_champion_data.csv");
-const dificultadesHeroes = [...new Set(csvDelLolillo.map(d => d.difficulty))].sort((a, b) => a.localeCompare(b));
-const dificultadesHeroes2 = [...dificultadesHeroes];
-const clasesHeroes = [...new Set(csvDelLolillo.map(d => d.herotype))].sort((a, b) => a.localeCompare(b));
-const clasesHeroes2 = [...clasesHeroes];
+
 
 export const Report = () => {
+
+  const [csvDeLeague, setCsvDeLeague] = useState([]);
+
+  useEffect(() => {
+    const extraerDatosCSV = async () => {
+      const csvDelLolillo = await csv("200125_LoL_champion_data.csv");
+      setCsvDeLeague(csvDelLolillo);
+    }
+    extraerDatosCSV();
+  }, [])
+
+
+  const dificultadesHeroes = [...new Set(csvDeLeague.map(d => d.difficulty))].sort((a, b) => a.localeCompare(b));
+  const dificultadesHeroes2 = [...dificultadesHeroes];
+  const clasesHeroes = [...new Set(csvDeLeague.map(d => d.herotype))].sort((a, b) => a.localeCompare(b));
+  const clasesHeroes2 = [...clasesHeroes];
+
   const difSeleccionado = useRef(null);
   const thSeleccionado = useRef(null);
   const graficoCircular = useRef(null);
@@ -28,7 +41,7 @@ export const Report = () => {
 
   useEffect(() => {
     const mapaRecursos = rollup(
-      csvDelLolillo,
+      csvDeLeague,
       (v) => v.length,
       (campeon) => campeon.resource
     );
@@ -42,7 +55,7 @@ export const Report = () => {
   }, [])
 
   useEffect(() => {
-    const mapaCampeones = csvDelLolillo.map((campeon) => ({
+    const mapaCampeones = csvDeLeague.map((campeon) => ({
       nombre: campeon[""],
       esenciaAzul: +campeon.be,
     }));
@@ -214,7 +227,7 @@ export const Report = () => {
     const clase = thSeleccionado.current.value
 
     const pdfCampeones = new jsPDF({orientation: "landscape"});
-    const campeonesFiltrados = csvDelLolillo.filter(campeon => {
+    const campeonesFiltrados = csvDeLeague.filter(campeon => {
       return campeon.difficulty === diff && 
             campeon.herotype === clase;
     });
