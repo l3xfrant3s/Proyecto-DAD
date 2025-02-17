@@ -15,6 +15,8 @@ import { autoTable } from 'jspdf-autotable';
 export const Report = () => {
 
   const [csvDeLeague, setCsvDeLeague] = useState([]);
+  const [cuentaRecursos, setCuentaRecursos] = useState([]);
+  const [esenciaAzulCampeones, setEsenciaAzulCampeones] = useState([]);
 
   useEffect(() => {
     const extraerDatosCSV = async () => {
@@ -22,8 +24,8 @@ export const Report = () => {
       setCsvDeLeague(csvDelLolillo);
     }
     extraerDatosCSV();
+    
   }, [])
-
 
   const dificultadesHeroes = [...new Set(csvDeLeague.map(d => d.difficulty))].sort((a, b) => a.localeCompare(b));
   const dificultadesHeroes2 = [...dificultadesHeroes];
@@ -36,8 +38,6 @@ export const Report = () => {
   const graficoBarras = useRef(null);
 
   const [combinacionDifTipoVacia, setCombinacionDifTipoVacia] = useState(false);
-  const [cuentaRecursos, setCuentaRecursos] = useState([]);
-  const [esenciaAzulCampeones, setEsenciaAzulCampeones] = useState([]);
 
   useEffect(() => {
     const mapaRecursos = rollup(
@@ -52,7 +52,7 @@ export const Report = () => {
     }));
 
     setCuentaRecursos(arrayRecursos);
-  }, [])
+  }, [csvDeLeague])
 
   useEffect(() => {
     const mapaCampeones = csvDeLeague.map((campeon) => ({
@@ -61,7 +61,7 @@ export const Report = () => {
     }));
 
     setEsenciaAzulCampeones(mapaCampeones);
-  }, []);
+  }, [csvDeLeague]);
 
   useEffect(() => {
     if (cuentaRecursos.length === 0) return;
@@ -287,12 +287,16 @@ export const Report = () => {
       {combinacionDifTipoVacia && <p>No hay ningún héroe con esa combinación de dificultad y de clase</p>}
       <br/>
       <p>Cantidad de campeones por recurso que utilizan</p>
-      <div ref={graficoCircular}/>
+      {cuentaRecursos.length > 0 ?
+        <div ref={graficoCircular}/>
+      : <p>Cargando...</p>}
       <br/>
       <p>Cada campeón y su costo en Esencia Azul</p>
-      <div style={{ width: "100%", overflowX: "auto" }}>
-        <svg ref={graficoBarras}></svg>
-      </div>
+      {esenciaAzulCampeones.length > 0 ? 
+        <div style={{ width: "100%", overflowX: "auto" }}>
+          <svg ref={graficoBarras}></svg>
+        </div>
+       : <p>Cargando...</p>}
     </>
   )
 }
