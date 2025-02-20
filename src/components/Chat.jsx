@@ -14,7 +14,7 @@ export const Chat = () => {
   // Función para llamar a la API de Gemini
   const callGeminiAPI = async (userMessage) => {
     const apiKey = "AIzaSyDUkMu1fnBh62ySNQa4SyFZYxbYfoPkwcs"; // Reemplaza con tu API Key
-    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     
     try {
       const response = await axios.post(
@@ -95,16 +95,24 @@ export const Chat = () => {
     }}>
       <ChatContainer>
         <MessageList autoScrollToBottom>
-          {messages.map((message, index) => {
-            <div key={index}>
-              <Message model={{
+          {messages.map((message, index) => (
+            <Message
+              key={index}
+              model={{
                 message: message.text,
-                sender: message.sender
-              }}/>
-            </div>
-          })}
+                sender: message.sender,
+                direction: message.sender === "user" ? "outgoing" : "incoming",
+                position: "single"
+              }}
+            />
+          ))}
         </MessageList>
-        <MessageInput placeholder="Type message here" attachButton={false} value={userInput} onChange={(textContent) => setUserInput(textContent)} onSend={handleSendMessage}/>
+        <MessageInput
+          placeholder="Type message here"
+          attachButton={false}
+          value={userInput}
+          onChange={(textContent) => setUserInput(textContent)}
+          onSend={handleSendMessage}/>
       </ChatContainer>
     </MainContainer>
   );

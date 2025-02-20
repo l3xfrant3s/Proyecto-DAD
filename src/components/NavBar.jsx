@@ -28,6 +28,9 @@ export const NavBar = () => {
               <NavLink to='/api' className="nav-link active">API</NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to='/chat' className="nav-link active">SandalIA</NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to='/informes' className="nav-link active">Informes</NavLink>
             </li>
             {/* <li className="nav-item">
